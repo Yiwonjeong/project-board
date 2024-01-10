@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta th:name="_csrf" th:content="${_csrf.token}"/>
+    <meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>write</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<script src="/js/Board/BoardWrite.js" defer></script>
+<script src="/js/ajaxAPI.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script type="text/javascript" src="/smarteditor/js/HuskyEZCreator.js" charset="utf-8"></script>
+<script>
+    const contextPath = /*[[@{/}]]*/ '';
+    const token = document.head.querySelector("meta[name='_csrf']").content;
+    const header = document.head.querySelector("meta[name='_csrf_header']").content;
+</script>
+
+<body>
+    <div id="wrapper">
+        <header>
+            <h3>Board System v1.0</h3>
+            <p>
+                <th:block th:if="${username != null}">
+                    <span th:text="${nickname}"></span>님 반갑습니다.
+                    <a th:href="@{/user/logout}">[로그아웃]</a>
+                </th:block>
+                <th:block th:if="${username == null}">
+                    <a th:href="@{/user/login}">[로그인]</a>
+                </th:block>
+            </p>
+        </header>
+        <main>
+            <div class="ly_write">
+                <div class="write-title">
+                    <input type="text" id="title" placeholder="제목을 입력해주세요">
+                </div>
+                <div class="view-content">
+                    <textarea name="editorTxt" id="editorTxt" placeholder="내용을 입력해주세요" style="width: 100%; height: 300px;"></textarea>
+                </div>
+                <div class="view-file">
+                    <input type="file" id="fileUpload">
+                </div>
+            </div>
+            <div class="post_btns">
+                <a th:href="@{/}" class="btn" id="btnCancel">취소</a>
+                <a href="#" class="btn" id="btnSave">등록</a>
+            </div>
+        </main>
+        <footer>
+            <p>ⓒCopyright by circle.co.kr</p>
+        </footer>
+    </div>
+</body>
+</html>

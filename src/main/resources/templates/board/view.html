@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta th:name="_csrf" th:content="${_csrf.token}"/>
+    <meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>view</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<script src="/js/Board/BoardView.js" defer></script>
+<script src="/js/ajaxAPI.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    const contextPath = /*[[@{/}]]*/ '';
+    const token = document.head.querySelector("meta[name='_csrf']").content;
+    const header = document.head.querySelector("meta[name='_csrf_header']").content;
+</script>
+
+<body>
+    <div id="wrapper">
+        <header>
+            <h3>Board System v1.0</h3>
+            <p>
+                <th:block th:if="${username != null}">
+                    <span th:text="${nickname}"></span>님 반갑습니다.
+                    <a th:href="@{/user/logout}">[로그아웃]</a>
+                </th:block>
+                <th:block th:if="${username == null}">
+                    <a th:href="@{/user/login}">[로그인]</a>
+                </th:block>
+            </p>
+        </header>
+        <main>
+            <div class="ly_view">
+                <div class="view-head">
+                    <div class="view-title">[[${board.title}]]</div>
+                    <input type="hidden" id="no" th:value="${no}">
+                    <div class="view-info">
+                        <div class="view-writer" >[[${board.name}]]</div>
+                        <div class="view-info-sub">
+                            <div class="view-date">[[${board.rdate}]]</div>
+                            <div class="view-count">조회 [[${board.hit}]]</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="view-content" th:utext="${board.content}"></div>
+                <div class="view-file" id="fileDownload" th:text="${board.oriName}" th:data-fno="${board.fno}">file</div>
+            </div>
+
+            <!-- 댓글 목록 -->
+            <div class="ly_reply">
+                <div class="reply-head">
+                    <span>댓글</span>
+                    <span th:text="${commentsSize}">1</span>
+                </div>
+                <div class="reply-content" th:each="comment:${comments}">
+                    <div class="reply-info">
+                        <div class="reply-sub1">
+                            <div class="reply-writer" th:text="${comment.name}"></div>
+                            <div class="reply-date" th:text="${comment.rdate}">2023.12.28 18:57</div>
+                        </div>
+                        <div class="reply-sub2">
+                            <div id="btnCoModify"> </div>
+                            <div><a class="btn" th:if="${comment.uid == username}" th:data-cno="${comment.cno}" th:id="'btnCoUpdate' + ${comment.cno}" onclick="fnCoModify(this.getAttribute('data-cno'))">수정</a></div>
+                            <div><a class="btn" th:data-cno="${comment.cno}" th:id="'btnCoSave'+ ${comment.cno}" style="display:none;">등록</a></div>
+                            <div><a class="btn" th:if="${comment.uid == username}" th:data-cno="${comment.cno}" th:id="'btnCoDelete' + ${comment.cno}" onclick="fnCoDelete(this.getAttribute('data-cno'))">삭제</a></div>
+                            <div><a class="btn" th:data-cno="${comment.cno}" th:id="'btnCoCancel'+ ${comment.cno}" style="display:none;">취소</a></div>
+                        </div>
+                    </div>
+                    <div class="reply-text" th:id="'replyTxt' + ${comment.cno}" th:text="${comment.comment}">hi</div>
+                    <textarea class="replyTxt" th:id="'replyTxtModified' + ${comment.cno}" th:text="${comment.comment}" style="display: none"></textarea>
+                </div>
+            </div>
+            <!-- 댓글 쓰기  -->
+            <div class="ly_comment">
+                <div class="comment-writer">[[${nickname}]]</div>
+                <textarea id="commentTxt" placeholder="댓글을 남겨보세요"></textarea>
+                <div class="middle-btn">
+                    <a href="#" id="btnCoRegister" class="btn btnRegister">등록</a>
+                </div>
+            </div>
+            <div class="post_btns">
+                <a th:href="@{/}" class="btn">목록</a>
+                <a th:if="${board.uid == username}" th:href="@{/board/modify(no=${no})}" class="btn">수정</a>
+                <a th:if="${board.uid == username}" class="btn" id="btnDelete">삭제</a>
+            </div>
+        </main>
+        <footer>
+            <p>ⓒCopyright by circle.co.kr</p>
+        </footer>
+    </div>
+</body>
+</html>

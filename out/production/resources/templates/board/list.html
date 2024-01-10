@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="_csrf" th:content="${_csrf?.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf?.headerName}"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>list</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<script src="/js/Board/BoardList.js" defer></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    const contextPath = /*[[@{/}]]*/ '';
+    const token = document.head.querySelector("meta[name='_csrf']").content;
+    const header = document.head.querySelector("meta[name='_csrf_header']").content;
+</script>
+
+
+<body>
+    <div id="wrapper">
+        <header>
+            <h3>Board System v1.0</h3>
+            <p>
+                <th:block th:if="${username != null}">
+                    <span th:text="${nickname}"></span>님 반갑습니다.
+                    <a th:href="@{/user/logout}">[로그아웃]</a>
+                </th:block>
+                <th:block th:if="${username == null}">
+                    <a th:href="@{/user/login}">[로그인]</a>
+                </th:block>
+            </p>
+        </header>
+        <main>
+            <form th:action="@{/}">
+                <div class="content">
+                    <div class="search">
+                        <select name="searchField">
+                            <option th:value="title" th:selected="${ph.sc.searchField == 'title'}">제목</option>
+                            <option th:value="uid" th:selected="${ph.sc.searchField == 'uid'}">작성자</option>
+                        </select>
+                        <input type="text" name="searchWord" placeholder="검색어를 입력해주세요" th:value="${param.searchWord}">
+                        <button type="button" class="btn reset" onclick="location.href = window.location.origin + window.location.pathname;">초기화</button>
+                        <button type="submit" class="btn" id="btnSearch">검색</button>
+                    </div>
+                    <table>
+                        <colgroup>
+                            <col style="width: 5%;">
+                            <col style="width: 5%;">
+                            <col style="width: 55%;">
+                            <col style="width: 10%;">
+                            <col style="width: 10%;">
+                            <col style="width: 10%;">
+                        </colgroup>
+                        <tr>
+                            <th> </th>
+                            <th>No</th>
+                            <th>제목</th>
+                            <th>작성자</th>
+                            <th>작성일</th>
+                            <th>조회</th>
+                        </tr>
+                        <tr th:each="list, itemStat :${list}">
+                            <td>
+                                <input type="checkbox">
+                            </td>
+                            <td th:text="${noList[itemStat.index]}"></td>
+                            <td>
+                                <a th:href="@{/board/view(no=${list.no})}" th:text="${list.title}" th:data="${list.no}"></a>
+                            </td>
+                            <td th:text="${list.name}"></td>
+                            <td th:text="${list.rdate}">2023.12.28</td>
+                            <td th:text="${list.hit}">2</td>
+                        </tr>
+                    </table>
+                    <div class="pagination" th:object="${ph}" th:style="${#lists.size(list) == 0 ? 'visibility:hidden;':''}">
+                        <th:block th:if="*{showPrev}">
+                            <a th:href="@{/} + ${ph.sc.getQueryString(ph.beginPage-1)}" class="prev">< </a>
+                        </th:block>
+                        <th:block th:each="num:${#numbers.sequence(ph.beginPage, ph.endPage)}">
+                            <a th:href="@{/} + ${ph.sc.getQueryString(num)}" th:class="${num == ph.sc.page ? 'num current':'num'}">
+                                [[${num}]]
+                            </a>
+                        </th:block>
+                        <th:block th:if="*{showNext}">
+                            <a th:href="@{/} + ${ph.sc.getQueryString(ph.endPage+1)}" class="next"> ></a>
+                        </th:block>
+                    </div>
+                    <div class="post_btns">
+                        <a th:href="@{/board/write}" class="btn">글쓰기</a>
+                    </div>
+                </div>
+            </form>
+        </main>
+        <footer>
+            <p>ⓒCopyright by circle.co.kr</p>
+        </footer>
+    </div>
+</body>
+</html>

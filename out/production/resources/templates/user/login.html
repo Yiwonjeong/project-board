@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>login</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script src="/js/User/UserLogin.js" defer></script>
+    <!-- kakao SDK for Kakao Login -->
+    <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.6.0/kakao.min.js"
+            integrity="sha384-6MFdIr0zOira1CHQkedUqJVql0YtcZA1P0nbPrQYJXVJZUkTk/oX4U9GhUIs3/z8" crossorigin="anonymous">
+    </script>
+    <script>
+        // SDK를 초기화 합니다. 사용할 앱의 JavaScript 키를 설정해야 합니다.
+        Kakao.init('ae1e863a165914fca5305d13d71a6e88');
+
+        // SDK 초기화 여부를 판단합니다.
+        console.log("초기화 여부: " + Kakao.isInitialized());
+    </script>
+</head>
+<body>
+    <div id="wrapper">
+        <header>
+            <h3>Board System v1.0</h3>
+            <p>
+                <span>홍길동</span>님 반갑습니다.
+                <a href="#">[로그아웃]</a>
+            </p>
+        </header>
+        <main>
+            <div class="ly_login">
+                <h1>LOGIN</h1>
+                    <div class="login_wrap">
+                        <form class="loginForm" th:action="@{/user/login}" method="post">
+                            <div>
+                                <input class="idForm" type="text" name="uid" placeholder="아이디">
+                            </div>
+                            <div>
+                                <input class="passForm" type="password" name="pass" placeholder="비밀번호">
+                            </div>
+                            <div class="rememberLogin">
+                                <label>
+                                    <input type="checkbox" name="rememberMe" id="rememberMe">로그인 유지
+                                </label>
+                            </div>
+                            <button class="btn btnLogin" type="submit">로그인</button>
+                        </form>
+                        <div class="login-sub">
+                            <a href="#">아이디 찾기</a>
+                            <div>|</div>
+                            <a href="#">비밀번호 찾기</a>
+                            <div>|</div>
+                            <a th:href="@{./register}">회원가입</a>
+                        </div>
+                        <div class="login-sns">
+                            <div>SNS 계정 간편 로그인/회원가입</div>
+                            <div>
+                                <a th:href="@{/oauth2/authorization/kakao}"><img src="/images/kakao-talk.png" alt="카카오 로그인"></a>
+                                <a th:href="@{/oauth2/authorization/naver}"><img src="/images/naver.png" alt="네이버 로그인"></a>
+                                <a th:href="@{/oauth2/authorization/kakao}"><img src="/images/google.png" alt="구글 로그인"></a>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </main>
+        <footer>
+            <p>ⓒCopyright by circle.co.kr</p>
+        </footer>
+    </div>
+</body>
+</html>
